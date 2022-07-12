@@ -51,7 +51,7 @@ const getData = async (web3, fromBlock, blockNumber, pageNumber, pageSize) => {
 						const params = web3.eth.abi.decodeParameters(['address', 'address'], rawLogData);
 						const referee = params[0];
 						const referer = params[1];
-						console.log(i + 1, blockHeight, referee, referer, timestamp)
+						// console.log(i + 1, blockHeight, referee, referer, timestamp)
 						addDB({
 							chainId,
 							referee, 
@@ -110,10 +110,10 @@ if(options.fromBlock !== undefined && options.toBlock !== undefined) {
 			web3.eth.getBlockNumber().then((blockNumber) => {
 				getData(
 					web3, 
-					blockNumber - 20,
+					blockNumber - 30,
 					blockNumber,
-					1, 
-					50
+					0, 
+					1000
 				);
 			})
 		}, 1000 * intervalSeconds);	
