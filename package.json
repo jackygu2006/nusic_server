@@ -5,7 +5,8 @@
   "main": "raca.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node monitor.js"
+		"init": "node checkCovalent.js -i",
+    "start": "node checkCovalent.js -r"
   },
   "author": "",
   "license": "ISC",
