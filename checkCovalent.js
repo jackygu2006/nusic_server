@@ -18,7 +18,7 @@ const intervalSeconds = process.env.INTERVAL_SECONDS;
 const getData = async (web3, fromBlock, blockNumber, pageNumber, pageSize) => {
 	console.log(blockNumber + ': Check referals data from height', fromBlock, 'to', blockNumber);
 	const url = `https://api.covalenthq.com/v1/${chainId}/events/address/${contractAddress}/?quote-currency=USD&format=JSON&starting-block=${fromBlock}&ending-block=${blockNumber}&page-number=${pageNumber}&page-size=${pageSize}&key=${apiKey}`;
-	// console.log(url);
+	console.log(url);
 	try {
 		request({
 			url,
@@ -100,7 +100,7 @@ if(options.fromBlock !== undefined && options.toBlock !== undefined) {
 				web3, 
 				process.env.FROM_BLOCK,
 				blockNumber,
-				2, 		// increase this num from 1 to no-data
+				0, 		// increase this num from 1 to no-data
 				3000 // Fixed
 			);
 		})
