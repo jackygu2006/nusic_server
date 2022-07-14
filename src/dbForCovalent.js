@@ -17,6 +17,7 @@ const addDB = async (data) => {
 		const sql1 = `select * from referals where chainId = ${data.chainId} and transactionHash = '${data.transactionHash}'`;
 		return connection.query(sql1, async function(error, result, fields) {
 			if(result.length > 0) {
+				// console.log(data.transactionHash + ' exist in db...');
 				return false;
 			} else {
 				const sql = `INSERT into referals(referee, referer, createAt, transactionHash, blockHeight, chainId) values ('${data.referee}', '${data.referer}', ${data.timestamp / 1000},'${data.transactionHash}', ${data.blockHeight}, ${data.chainId})`;
