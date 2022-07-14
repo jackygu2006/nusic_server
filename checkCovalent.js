@@ -82,6 +82,8 @@ program
 program
 	.option('-i --init', 'Initialize, run first time to fetch all history data')
 	.option('-r --run', 'Run automatically to fetch data every 20 seconds')
+	.option('-n --pageNumber', 'page number while initialize the history data')
+	.option('-s --pageSize', 'page size while initialize the history data')
 
 if(!process.argv[2]) program.help();
 program.parse(process.argv);
@@ -89,34 +91,29 @@ program.parse(process.argv);
 const options = program.opts();
 const web3 = new Web3(new Web3.providers.HttpProvider(process.env.RPC_URL));
 
-if(options.fromBlock !== undefined && options.toBlock !== undefined) {
-	console.log("params: fromBlock and toBlock must be assigned");
-	return;
-} else {
-	if(options.init !== undefined) {
-		console.log("Initializing...");
+if(options.init !== undefined) {
+	console.log("Initializing...");
+	web3.eth.getBlockNumber().then((blockNumber) => {
+		getData(
+			web3, 
+			process.env.FROM_BLOCK,
+			blockNumber,
+			options.pageNumber, 		// increase this num from 1 to no-data
+			options.pageSize // Fixed
+		);
+	})
+} else if(options.run !== undefined) {
+	console.log(`Run automaticly every ${intervalSeconds} seconds`);
+	setIntervalAsync(async () => {
 		web3.eth.getBlockNumber().then((blockNumber) => {
 			getData(
 				web3, 
-				process.env.FROM_BLOCK,
+				blockNumber - 30,
 				blockNumber,
-				0, 		// increase this num from 1 to no-data
-				3000 // Fixed
+				0, 
+				1000
 			);
 		})
-	} else if(options.run !== undefined) {
-		console.log(`Run automaticly every ${intervalSeconds} seconds`);
-		setIntervalAsync(async () => {
-			web3.eth.getBlockNumber().then((blockNumber) => {
-				getData(
-					web3, 
-					blockNumber - 30,
-					blockNumber,
-					0, 
-					1000
-				);
-			})
-		}, 1000 * intervalSeconds);	
-	}
+	}, 1000 * intervalSeconds);	
 }
 
