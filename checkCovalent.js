@@ -40,6 +40,7 @@ const getData = async (web3, fromBlock, blockNumber, pageNumber, pageSize) => {
 					return;
 				}
 
+				console.log("Data fetched from covalent, count = " + data.data.items.length);
 				for(let i = 0; i < data.data.items.length; i++) {
 					const item = data.data.items[i];
 					if(item.raw_log_topics.includes(topic)) {
@@ -62,6 +63,7 @@ const getData = async (web3, fromBlock, blockNumber, pageNumber, pageSize) => {
 						});
 					}
 				}
+				console.log("Done...")
 			}
 		});
 	} catch (e) {
