@@ -82,8 +82,8 @@ program
 program
 	.option('-i --init', 'Initialize, run first time to fetch all history data')
 	.option('-r --run', 'Run automatically to fetch data every 20 seconds')
-	.option('-n --pageNumber', 'page number while initialize the history data')
-	.option('-s --pageSize', 'page size while initialize the history data')
+	.option('-n --pageNumber <PageNumber>', 'page number while initialize the history data')
+	.option('-s --pageSize <PageSize>', 'page size while initialize the history data')
 
 if(!process.argv[2]) program.help();
 program.parse(process.argv);
