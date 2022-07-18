@@ -110,10 +110,10 @@ if(options.init !== undefined) {
 		web3.eth.getBlockNumber().then((blockNumber) => {
 			getData(
 				web3, 
-				blockNumber - 30,
+				blockNumber - 100,
 				blockNumber,
 				0, 
-				1000
+				1500
 			);
 		})
 	}, 1000 * intervalSeconds);	
