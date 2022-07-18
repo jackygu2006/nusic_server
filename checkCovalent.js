@@ -113,7 +113,7 @@ if(options.init !== undefined) {
 				blockNumber - 100,
 				blockNumber,
 				0, 
-				1500
+				2000
 			);
 		})
 	}, 1000 * intervalSeconds);	
