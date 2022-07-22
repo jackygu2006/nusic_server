@@ -20,7 +20,7 @@ const addDB = async (data) => {
 				// console.log(data.transactionHash + ' exist in db...');
 				return false;
 			} else {
-				const sql = `INSERT into referals(referee, referer, createAt, transactionHash, blockHeight, chainId) values ('${data.referee}', '${data.referer}', ${data.timestamp / 1000},'${data.transactionHash}', ${data.blockHeight}, ${data.chainId})`;
+				const sql = `INSERT into referals(team, referee, referer, createAt, transactionHash, blockHeight, chainId) values (${process.env.TEAM},'${data.referee}', '${data.referer}', ${data.timestamp / 1000},'${data.transactionHash}', ${data.blockHeight}, ${data.chainId})`;
 				const promise = new Promise((resolve, reject) => {
 					connection.query(
 						sql,
