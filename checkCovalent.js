@@ -6,13 +6,15 @@ require('dotenv').config();
 
 const {
 	addDB,
+	updateStatusDB,
 } = require('./src/dbForCovalent.js');
 
 const Web3 = require('web3');
 const contractAddress = process.env.CONTRACT_ADDRESS;
 const chainId = process.env.CHAIN_ID;
 const apiKey = process.env.COVALENT_API_KEY;
-const topic = process.env.TOPIC;
+const topicAddReferer = process.env.TOPIC_ADD_REFERER;
+const topicFunding = process.env.TOPIC_FUNDING;
 const intervalSeconds = process.env.INTERVAL_SECONDS;
 
 const getData = async (web3, fromBlock, blockNumber, pageNumber, pageSize) => {
@@ -43,7 +45,8 @@ const getData = async (web3, fromBlock, blockNumber, pageNumber, pageSize) => {
 				console.log("Data fetched from covalent, count = " + data.data.items.length);
 				for(let i = 0; i < data.data.items.length; i++) {
 					const item = data.data.items[i];
-					if(item.raw_log_topics.includes(topic)) {
+					if(item.raw_log_topics.includes(topicAddReferer)) {
+						// Add referer to database
 						// console.log(item);
 						const transactionHash = item.tx_hash;
 						const blockHeight = item.block_height;
@@ -61,6 +64,31 @@ const getData = async (web3, fromBlock, blockNumber, pageNumber, pageSize) => {
 							blockHeight, 
 							transactionHash
 						});
+					}
+				}
+
+				for(let i = 0; i < data.data.items.length; i++) {
+					const item = data.data.items[i];
+					if(item.raw_log_topics.includes(topicFunding)) {
+						// Add funding status to database
+						// console.log(item);
+						const transactionHash = item.tx_hash;
+						const timestamp = item.block_signed_at;
+						const rawLogData = item.raw_log_data;
+						const params = web3.eth.abi.decodeParameters(['address', 'uint256', 'uint256'], rawLogData);
+						const referee = params[0];
+						const rate = params[1];
+						const amount = params[2];
+						if(amount > 0) {
+							updateStatusDB({
+								chainId,
+								referee,
+								rate,
+								amount,
+								timestamp,
+								transactionHash,
+							})
+						}
 					}
 				}
 				console.log("Done...")

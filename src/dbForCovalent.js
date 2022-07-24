@@ -42,6 +42,35 @@ const addDB = async (data) => {
 	}
 }
 
+const updateStatusDB = async (data) => {
+	try {
+		const sql1 = `select * from referals where chainId = ${data.chainId} and referee = '${data.referee}' and funded = 0`;
+		return connection.query(sql1, function (error, result, fields) {
+			if(result.length === 0) {
+				return false;
+			} else {
+				const sql = `update referals set funded = 1, rate = ${data.rate}, amount = ${data.amount} where chainId = '${data.chainId}' and referee = '${data.referee}'`;
+				const promise = new Promise((resolve, reject) => {
+					connection.query(
+						sql,
+						function (error, d, fields) {
+							if(error) return reject(error);
+							else {
+								const dt = date.format(new Date(data.timestamp), 'YYYY-MM-DD HH:mm:ss');
+								console.log(`=> ${dt} referee: ${data.referee} funded, hash ${data.transactionHash}`);
+								return resolve(data);
+							}
+						}
+					)
+				})
+				return promise;
+			}
+		})
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 /**
  * Cause the database duplicated write, do the following sql and delete the duplicated records
  */
@@ -59,5 +88,6 @@ const deleteDuplicateRowsByField = async (field) => {
 
 module.exports = {
 	addDB,
+	updateStatusDB,
 	deleteDuplicateRowsByField,
 }
